@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>SchoolBank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">🏦 SchoolBank</h2>
+        <nav>
+            <a class="active">📊 Dashboard</a>
+            <a>👨‍🎓 Alunos</a>
+            <a>👩‍🏫 Funcionários</a>
+            <a>💰 Pagamentos</a>
+            <a>🧾 Holerites</a>
+            <a>📄 Relatórios</a>
+            <a>⚙️ Configurações</a>
+        </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h1>Dashboard Financeiro</h1>
+                <span>Visão geral do sistema</span>
+            </div>
+            <div class="user">
+                <span>Administrador</span>
+            </div>
+        </header>
+
+        <!-- Cards -->
+        <section class="cards">
+            <div class="card">
+                <h3>Total Recebido</h3>
+                <p class="value green">R$ 18.450,00</p>
+            </div>
+            <div class="card">
+                <h3>Pendências</h3>
+                <p class="value yellow">R$ 3.200,00</p>
+            </div>
+            <div class="card">
+                <h3>Alunos Ativos</h3>
+                <p class="value">245</p>
+            </div>
+            <div class="card">
+                <h3>Funcionários</h3>
+                <p class="value">32</p>
+            </div>
+        </section>
+
+        <!-- Tabela -->
+        <section class="table-box">
+            <h2>Últimos Pagamentos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Tipo</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>João Silva</td>
+                        <td>Aluno</td>
+                        <td>R$ 550,00</td>
+                        <td class="status ok">Pago</td>
+                    </tr>
+                    <tr>
+                        <td>Ana Costa</td>
+                        <td>Funcionária</td>
+                        <td>R$ 2.300,00</td>
+                        <td class="status ok">Pago</td>
+                    </tr>
+                    <tr>
+                        <td>Lucas Lima</td>
+                        <td>Aluno</td>
+                        <td>R$ 600,00</td>
+                        <td class="status pending">Pendente</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
