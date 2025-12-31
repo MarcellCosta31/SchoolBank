@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SchoolBank | Gerar Holerite</title>
+    <link rel="stylesheet" href="../EstilosCss/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/EstilosCss/pages/holerite.css">
+</head>
+
+<body>
+
+<div class="app">
+    <aside class="sidebar">
+        <h2 class="logo">🏦 SchoolBank</h2>
+        <nav>
+            <a href="index.html"><i class="fas fa-chart-bar"></i> Dashboard</a>
+            <a href="alunos.html"><i class="fas fa-users"></i> Funcionários</a>
+            <a href="pagamentos.html"><i class="fas fa-money-bill-wave"></i> Pagamentos e Descontos</a>
+            <a class="active" href="holerite.html"><i class="fas fa-file-invoice"></i> Holerites</a>
+            <a href="configuracao.html"><i class="fas fa-cog"></i> Configurações</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="header">
+            <h1>Gerar Holerite</h1>
+        </header>
+
+        <div class="holerite-generator">
+            <h2><i class="fas fa-file-pdf"></i> Gerar Novo Holerite</h2>
+            
+            <div class="form-group">
+                <label for="funcionarioInput">Funcionário</label>
+                <input type="text" id="funcionarioInput" placeholder="Digite o nome do funcionário..." autocomplete="off">
+                <div id="sugestoesFuncionario" class="sugestoes-container"></div>
+                <input type="hidden" id="funcionarioId">
+                <input type="hidden" id="funcionarioNumero">
+            </div>
+            
+            <div class="form-group">
+                <label for="mesReferencia">Mês/Referência</label>
+                <input type="month" id="mesReferencia" required>
+            </div>
+            
+            <div id="loader" class="loader">
+                <i class="fas fa-spinner"></i>
+                <p>Processando holerite...</p>
+            </div>
+            
+            <div id="preview" class="preview-container">
+                <div class="preview-header">
+                    <h3>Pré-visualização do Holerite</h3>
+                    <p id="previewInfo"></p>
+                </div>
+                
+                <div class="preview-content">
+                    <div class="preview-section">
+                        <h4>Proventos</h4>
+                        <div id="proventosList"></div>
+                        <div class="preview-item" style="font-weight: bold; border-top: 2px solid #ddd; padding-top: 10px;">
+                            <span>Total de Proventos:</span>
+                            <span id="totalProventos">R$ 0,00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-section">
+                        <h4>Descontos</h4>
+                        <div id="descontosList"></div>
+                        <div class="preview-item" style="font-weight: bold; border-top: 2px solid #ddd; padding-top: 10px;">
+                            <span>Total de Descontos:</span>
+                            <span id="totalDescontos">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preview-total">
+                    <h4>Valor Líquido a Receber</h4>
+                    <div class="valor" id="valorLiquido">R$ 0,00</div>
+                </div>
+            </div>
+            
+            <div class="generator-actions">
+                <button class="btn" onclick="previsualizar()" id="btnPrevisualizar" disabled>
+                    <i class="fas fa-eye"></i> Pré-visualizar
+                </button>
+                <button class="btn btn-success" onclick="gerarPDF()" id="btnGerarPDF" disabled>
+                    <i class="fas fa-file-pdf"></i> Gerar PDF
+                </button>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Como funciona</h3>
+                <p>Selecione um funcionário e o mês referência para gerar o holerite.</p>
+                <p>O sistema irá:</p>
+                <ul>
+                    <li>Buscar todos os pagamentos do funcionário no mês selecionado</li>
+                    <li>Buscar todos os descontos do funcionário no mês selecionado</li>
+                    <li>Calcular automaticamente os totais</li>
+                    <li>Gerar um PDF profissional do holerite</li>
+                </ul>
+                <p><strong>Observação:</strong> O holerite será salvo automaticamente no sistema.</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- PDF.js e html2pdf.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script type="module" src="/ScriptsJs/holerite.js"></script>
+
+</body>
+</html>

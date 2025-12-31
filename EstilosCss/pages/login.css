@@ -1,0 +1,63 @@
+/* pages/login.css - Estilos da página de login */
+.login-body {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-card {
+    background: var(--card-bg);
+    padding: 35px;
+    width: 100%;
+    max-width: 350px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.login-card h1 {
+    margin-bottom: 5px;
+    color: var(--primary-color);
+}
+
+.login-card p {
+    margin-bottom: 20px;
+    color: var(--text-light);
+}
+
+.login-card label {
+    display: block;
+    text-align: left;
+    margin-top: 12px;
+    font-weight: 600;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.erro {
+    color: var(--danger-color);
+    margin-top: 0px;
+    min-height: 20px;
+    font-size: 14px;
+    padding: 0%;
+}
+
+.full {
+    width: 100%;
+    margin-top: 20px;
+}

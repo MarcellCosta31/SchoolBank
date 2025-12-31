@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SchoolBank | Pagamentos e Descontos</title>
+    <link rel="stylesheet" href="../EstilosCss/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">🏦 SchoolBank</h2>
+            <nav>
+                <a href="index.html"><i class="fas fa-chart-bar"></i>Dashboard</a>
+                <a href="alunos.html"><i class="fas fa-users"></i>Funcionários</a>
+                <a class="active" href="pagamentos.html"><i class="fas fa-money-bill-wave"></i>Pagamentos e Descontos</a>
+                <a href="holerite.html"><i class="fas fa-file-invoice"></i>Holerites</a>
+                <a href="configuracao.html"><i class="fas fa-cog"></i>Configurações</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <h1><i class="fas fa-hand-holding-usd"></i> Registrar Pagamentos e Descontos</h1>
+            </header>
+
+            <section class="dashboard-grid">
+                <!-- Formulário de Registro -->
+                <div class="card large-card">
+                    <h2><i class="fas fa-plus-circle"></i> Novo Registro</h2>
+                    
+                    <form id="registroForm" class="form-box">
+                        <div class="form-group">
+                            <label for="funcionarioInput"><i class="fas fa-user"></i> Funcionário</label>
+                            <input type="text" id="funcionarioInput" placeholder="Digite o nome do funcionário" autocomplete="off">
+                            <div id="sugestoesFuncionario" class="sugestoes-container"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-alt"></i> Mês de Referência</label>
+                            <input type="month" id="mesReferencia" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-exchange-alt"></i> Tipo de Registro</label>
+                            <div class="tipo-botoes">
+                                <button type="button" id="btnPagamento" class="tipo-btn tipo-ativo">
+                                    <i class="fas fa-plus-circle"></i> Pagamento
+                                </button>
+                                <button type="button" id="btnDesconto" class="tipo-btn">
+                                    <i class="fas fa-minus-circle"></i> Desconto
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="opcoesLabel"><i class="fas fa-list-check"></i> Opções de Pagamento</label>
+                            <div id="opcoesContainer" class="opcoes-container">
+                                <!-- Opções serão carregadas dinamicamente -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-comment"></i> Observação</label>
+                            <textarea id="observacao" placeholder="Observações adicionais..." rows="2"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-calculator"></i> Total Calculado</label>
+                            <div class="total-display">
+                                <span id="totalCalculado">R$ 0,00</span>
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnRegistrar" class="btn green">
+                            <i class="fas fa-check"></i> Confirmar Registro
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Resumo do Mês -->
+                <div class="card">
+                    <h2><i class="fas fa-chart-pie"></i> Resumo do Mês</h2>
+                    <div class="resumo-container">
+                        <div class="resumo-item">
+                            <span class="resumo-label">Salário Base</span>
+                            <span class="resumo-valor positivo">R$ 1.000,00</span>
+                        </div>
+                        <div class="resumo-item">
+                            <span class="resumo-label">Total de Pagamentos</span>
+                            <span class="resumo-valor positivo" id="totalPagamentos">R$ 0,00</span>
+                        </div>
+                        <div class="resumo-item">
+                            <span class="resumo-label">Total de Descontos</span>
+                            <span class="resumo-valor negativo" id="totalDescontos">R$ 0,00</span>
+                        </div>
+                        <div class="resumo-divider"></div>
+                        <div class="resumo-item total">
+                            <span class="resumo-label">Total Final</span>
+                            <span class="resumo-valor" id="totalFinal">R$ 1.000,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Histórico Recente -->
+                <div class="card large-card">
+                    <h2><i class="fas fa-history"></i> Histórico Recente</h2>
+                    <div id="historicoContainer" class="historico-container">
+                        <p class="vazio">Nenhum registro encontrado para este mês.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-check-circle"></i> Confirmação</h3>
+            <p id="confirmMessage"></p>
+            <div class="modal-botoes">
+                <button id="btnCancelar" class="btn gray">Cancelar</button>
+                <button id="btnConfirmar" class="btn green">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../ScriptsJs/pagamentos.js"></script>
+</body>
+</html>

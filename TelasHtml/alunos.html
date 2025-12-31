@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SchoolBank | Funcionários</title>
+    <link rel="stylesheet" href="../EstilosCss/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <h2 class="logo">🏦 SchoolBank</h2>
+
+            <nav>
+                <a href="index.html"><i class="fas fa-chart-bar"></i>Dashboard</a>
+                <a class="active" href="alunos.html"><i class="fas fa-users"></i>Funcionários</a>
+                <a href="pagamentos.html"><i class="fas fa-money-bill-wave"></i>Pagamentos e Descontos</a>
+                <a href="holerite.html"><i class="fas fa-file-invoice"></i>Holerites</a>
+                <a href="configuracao.html"><i class="fas fa-cog"></i>Configurações</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <header class="header">
+                <h1>Gestão de Funcionários</h1>
+
+                <div class="search-box">
+                    <input id="buscaFuncionario" placeholder="🔍 Buscar por nome ou número">
+                </div>
+
+                <button class="btn" onclick="abrirModal()">➕ Novo Funcionário</button>
+            </header>
+
+            <section class="table-box">
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Nome</th>
+                            <th>Série</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaFuncionarios"></tbody>
+                </table>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- MODAL -->
+    <div id="modalFuncionario" class="modal">
+        <div class="modal-content">
+            <h2>Novo Funcionário</h2>
+
+            <label>Nome do Funcionário</label>
+            <input type="text" id="nomeFuncionario" placeholder="Digite o nome">
+
+            <label>Série</label>
+            <select id="serieFuncionario">
+                <option value="">Selecione a série</option>
+            </select>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="fecharModal()">Cancelar</button>
+                <button class="btn green" onclick="salvarFuncionario()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script type="module">
+        import {
+            adicionarFuncionarioComNumero,
+            listarFuncionariosTempoReal,
+            atualizarContadorFuncionarios  
+        } from "../firebase.js";
+
+        import {
+            getFirestore,
+            collection,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        import { db } from "../firebase.js";
+
+        const modal = document.getElementById("modalFuncionario");
+        const inputNome = document.getElementById("nomeFuncionario");
+        const selectSerie = document.getElementById("serieFuncionario");
+        const tbody = document.getElementById("listaFuncionarios");
+        const busca = document.getElementById("buscaFuncionario");
+
+        /* ======================
+           CARREGAR SÉRIES
+        ====================== */
+        async function carregarSeries() {
+            selectSerie.innerHTML = `<option value="">Selecione a série</option>`;
+
+            const snapshot = await getDocs(
+                collection(db, "configuracoes", "series", "lista")
+            );
+
+            snapshot.forEach(doc => {
+                const serie = doc.data();
+
+                const option = document.createElement("option");
+                option.value = doc.id;          // ID da série
+                option.textContent = serie.nome; // Nome da série
+                selectSerie.appendChild(option);
+            });
+        }
+
+
+        /* ======================
+           MODAL
+        ====================== */
+        window.abrirModal = async () => {
+            inputNome.value = "";
+            selectSerie.value = "";
+            await carregarSeries();
+            modal.style.display = "flex";
+            inputNome.focus();
+        };
+
+        window.fecharModal = () => {
+            modal.style.display = "none";
+        };
+
+        /* ======================
+           SALVAR FUNCIONÁRIO
+        ====================== */
+        window.salvarFuncionario = async () => {
+    const nome = inputNome.value.trim();
+    const serieId = selectSerie.value;
+    const serieNome = selectSerie.options[selectSerie.selectedIndex]?.text;
+
+    if (!nome || !serieId) {
+        alert("Preencha o nome e a série");
+        return;
+    }
+
+    try {
+        // Desabilita o botão para evitar duplo clique
+        const btn = document.querySelector('.modal-actions .btn.green');
+        btn.disabled = true;
+        btn.textContent = 'Salvando...';
+        
+        const numero = await adicionarFuncionarioComNumero(nome, {
+            serieId,
+            serieNome
+        });
+
+        alert(`Funcionário cadastrado!\nNúmero: ${numero}`);
+        fecharModal();
+    } catch (erro) {
+        console.error(erro);
+        alert("Erro ao cadastrar funcionário");
+        
+        // Tenta atualizar o dashboard manualmente em caso de erro
+        try {
+            await atualizarContadorFuncionarios();
+        } catch (dashboardError) {
+            console.error("Erro ao atualizar dashboard:", dashboardError);
+        }
+    } finally {
+        // Reabilita o botão
+        const btn = document.querySelector('.modal-actions .btn.green');
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Salvar';
+        }
+    }
+};
+
+        /* ======================
+           LISTAGEM + BUSCA
+        ====================== */
+        listarFuncionariosTempoReal((funcionarios) => {
+
+            function render(lista) {
+                tbody.innerHTML = "";
+
+                lista.forEach(funcionario => {
+                    const tr = document.createElement("tr");
+
+                    tr.innerHTML = `
+                    <td>${funcionario.numero}</td>
+                    <td class="link-aluno"
+                        onclick="abrirDescricao('${funcionario.id}')">
+                        ${funcionario.nome}
+                    </td>
+                    <td>${funcionario.serieNome || "-"}</td>
+                    <td>${funcionario.status}</td>
+                `;
+
+                    tbody.appendChild(tr);
+                });
+            }
+
+            render(funcionarios);
+
+            busca.oninput = () => {
+                const termo = busca.value.toLowerCase();
+
+                render(
+                    funcionarios.filter(f =>
+                        f.nome.toLowerCase().includes(termo) ||
+                        f.numero.includes(termo)
+                    )
+                );
+            };
+        });
+
+        window.abrirDescricao = (id) => {
+            window.location.href = `descricaoFuncionario.html?id=${id}`;
+        };
+    </script>
+
+</body>
+
+</html>

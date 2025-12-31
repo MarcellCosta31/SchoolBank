@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>SchoolBank | Dashboard</title>
+
+    <link rel="stylesheet" href="/EstilosCss/style.css">
+    <link rel="stylesheet" href="/EstilosCss/pages/dashboard.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">🏦 SchoolBank</h2>
+        <nav>
+            <a class="active" href="index.html"><i class="fas fa-chart-bar"></i> Dashboard</a>
+            <a href="alunos.html"><i class="fas fa-users"></i> Funcionários</a>
+            <a href="pagamentos.html"><i class="fas fa-money-bill-wave"></i> Pagamentos e Descontos</a>
+            <a href="holerite.html"><i class="fas fa-file-invoice"></i> Holerites</a>
+            <a href="configuracao.html"><i class="fas fa-cog"></i> Configurações</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="header">
+            <div>
+                <h1>Dashboard Financeiro</h1>
+                <span>Visão geral do sistema</span>
+            </div>
+            <div class="user">
+                <span id="nomeUsuario">Carregando...</span>
+                <button class="btn btn-small" id="btnAtualizar">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- CARDS -->
+        <section class="cards">
+
+            <div class="card">
+                <div class="card-icon green"><i class="fas fa-money-bill-wave"></i></div>
+                <h3>Total Pago</h3>
+                <p class="value green" id="totalPago">R$ 0,00</p>
+                <small id="periodoPago">Este mês</small>
+            </div>
+
+            <div class="card">
+                <div class="card-icon yellow"><i class="fas fa-minus-circle"></i></div>
+                <h3>Total Descontado</h3>
+                <p class="value yellow" id="totalTirado">R$ 0,00</p>
+                <small id="periodoTirado">Este mês</small>
+            </div>
+
+            <div class="card">
+                <div class="card-icon blue"><i class="fas fa-user-check"></i></div>
+                <h3>Funcionários Ativos</h3>
+                <p class="value" id="ativos">0</p>
+                <small id="percentualAtivos">0% ativos</small>
+            </div>
+
+            <div class="card">
+                <div class="card-icon purple"><i class="fas fa-users"></i></div>
+                <h3>Total de Funcionários</h3>
+                <p class="value" id="totalFuncionarios">0</p>
+                <small>Salário base: R$ 1.000,00</small>
+            </div>
+
+        </section>
+
+        <!-- TABELA -->
+        <section class="table-box">
+            <div class="table-header">
+                <h2><i class="fas fa-history"></i> Últimas Transações</h2>
+                <div class="table-actions">
+                    <span class="badge" id="contagemTransacoes">0 transações</span>
+                    <a href="pagamentos.html" class="btn-link">
+                        <i class="fas fa-external-link-alt"></i> Nova transação
+                    </a>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Funcionário</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="ultimosPagamentos"></tbody>
+            </table>
+
+            <div class="table-footer">
+                <small id="ultimaAtualizacao">Última atualização: --:--:--</small>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- JS -->
+<script type="module" src="/ScriptsJs/dashboard.js"></script>
+</body>
+</html>

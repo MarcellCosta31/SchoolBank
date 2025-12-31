@@ -1,0 +1,330 @@
+/* pages/pagamentos.css - Estilos da página de pagamentos */
+
+/* Autocomplete */
+.sugestoes-container {
+    position: absolute;
+    background: rgb(226, 225, 225);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(211, 211, 211, 0.171);
+    width: calc(50% - 2px);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 5px;
+}
+
+.sugestao-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s;
+}
+
+.sugestao-item:hover {
+    background-color: #f5f5f5;
+}
+
+.sugestao-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.sugestao-info strong {
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.sugestao-info small {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+/* Tipo de registro */
+.tipo-botoes {
+    display: flex;
+    gap: 10px;
+}
+
+.tipo-btn {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tipo-btn.tipo-ativo {
+    background: var(--success-color);
+    color: white;
+    border-color: var(--success-color);
+}
+
+.tipo-btn:not(.tipo-ativo):hover {
+    border-color: var(--success-color);
+    background: #f0f9f0;
+}
+
+/* Opções */
+.opcoes-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.opcao-item {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.opcao-item:last-child {
+    border-bottom: none;
+}
+
+.opcao-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.opcao-info input[type="checkbox"] {
+    width: auto;
+}
+
+.opcao-info label {
+    flex: 1;
+    margin: 0;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.opcao-valor {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.opcao-valor.pagamento {
+    color: var(--success-color);
+}
+
+.opcao-valor.desconto {
+    color: var(--danger-color);
+}
+
+.opcao-extra {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.opcao-extra input {
+    flex: 1;
+    padding: 8px;
+    font-size: 13px;
+}
+
+/* Total */
+.total-display {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.total-display .positivo {
+    color: var(--success-color);
+}
+
+.total-display .negativo {
+    color: var(--danger-color);
+}
+
+/* Resumo */
+.resumo-container {
+    padding: 15px 0;
+}
+
+.resumo-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.resumo-item.total {
+    border-top: 2px solid var(--border-color);
+    border-bottom: none;
+    padding-top: 15px;
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.resumo-label {
+    color: var(--text-light);
+}
+
+.resumo-valor {
+    font-weight: bold;
+}
+
+.resumo-valor.positivo {
+    color: var(--success-color);
+}
+
+.resumo-valor.negativo {
+    color: var(--danger-color);
+}
+
+.resumo-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 10px 0;
+}
+
+/* Histórico */
+.historico-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.historico-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 15px;
+}
+
+.historico-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.historico-icon.pagamento {
+    background: #e8f5e9;
+    color: var(--success-color);
+}
+
+.historico-icon.desconto {
+    background: #ffebee;
+    color: var(--danger-color);
+}
+
+.historico-info {
+    flex: 1;
+}
+
+.historico-info strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.historico-info small {
+    display: block;
+    color: var(--text-light);
+    font-size: 12px;
+}
+
+.historico-info .observacao {
+    color: var(--warning-color);
+    font-style: italic;
+}
+
+.historico-valor {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.historico-valor.pagamento {
+    color: var(--success-color);
+}
+
+.historico-valor.desconto {
+    color: var(--danger-color);
+}
+
+.vazio {
+    text-align: center;
+    color: #999;
+    padding: 40px 0;
+    font-style: italic;
+}
+
+/* pages/pagamentos.css - Adicione estas regras: */
+
+/* Autocomplete - ajuste a posição */
+.sugestoes-container {
+    position: absolute;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: calc(100% - 2px);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 5px;
+    display: none; /* Começa oculto por padrão */
+}
+
+/* Garantir que o container do input tenha posição relativa */
+.form-group {
+    position: relative; /* Importante para posicionamento absoluto das sugestões */
+}
+
+/* Estilo para a mensagem "não encontrado" */
+.sugestao-item:first-child:only-child {
+    color: var(--text-light);
+    font-style: italic;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Adicione um indicador visual quando há sugestões */
+.sugestoes-container:not(:empty) {
+    display: block; /* Será controlado via JavaScript */
+}
+
+/* Adicione uma seta indicadora (opcional) */
+.sugestoes-container::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid var(--border-color);
+}
+
+.sugestoes-container::after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 21px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid white;
+}

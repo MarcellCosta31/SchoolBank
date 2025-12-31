@@ -1,0 +1,184 @@
+/* pages/dashboard.css - Estilos específicos do Dashboard */
+/* (Os estilos já estão cobertos pelos componentes básicos) */
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: white;
+}
+
+.card-icon.green { background: #3cb371; }
+.card-icon.yellow { background: #f0ad4e; }
+.card-icon.blue { background: #4fa3d1; }
+.card-icon.purple { background: #8a2be2; }
+
+.card small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 12px;
+}
+
+/* Header com usuário */
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(79, 163, 209, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+}
+
+.user span {
+    font-weight: 600;
+    color: #1e3a5f;
+}
+
+.btn-small {
+    padding: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Table styling */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.badge {
+    background: #f0f0f0;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+}
+
+.btn-link {
+    color: #4fa3d1;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.table-footer small {
+    color: #666;
+    font-size: 13px;
+}
+
+/* Funcionário info */
+.funcionario-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.funcionario-info i {
+    color: #4fa3d1;
+}
+
+/* Tipo badge */
+.tipo-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.tipo-badge.ok {
+    background: rgba(60, 179, 113, 0.1);
+    color: #3cb371;
+}
+
+.tipo-badge.pending {
+    background: rgba(240, 173, 78, 0.1);
+    color: #f0ad4e;
+}
+
+/* Valores */
+.valor.ok {
+    color: #3cb371;
+    font-weight: 600;
+}
+
+.valor.pending {
+    color: #f0ad4e;
+    font-weight: 600;
+}
+
+/* Estados vazios */
+.vazio, .erro {
+    padding: 40px 20px;
+    text-align: center;
+    color: #999;
+}
+
+.vazio i, .erro i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.erro {
+    color: #f44336;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .table-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .table-footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}

@@ -1,0 +1,13 @@
+/* style.css - Arquivo principal que importa todos os outros */
+@import url('base.css');
+@import url('layout.css');
+@import url('components.css');
+@import url('forms.css');
+@import url('pages/dashboard.css');
+@import url('pages/funcionarios.css');
+@import url('pages/pagamentos.css');
+@import url('pages/holerite.css');
+@import url('pages/configuracao.css');
+@import url('pages/login.css');
+@import url('pages/descricao.css');
+@import url('utilities.css');

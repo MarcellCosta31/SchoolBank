@@ -1,0 +1,17 @@
+/* pages/descricao.css - Estilos da página de descrição do funcionário */
+
+/* Estilos específicos para a página de descrição */
+.main .table-box:not(:last-child) {
+    margin-bottom: 25px;
+}
+
+/* Ajuste do botão voltar */
+.header button.btn {
+    margin-left: auto;
+}
+
+/* Tabela de boletim */
+table .btn-small {
+    padding: 5px 8px;
+    font-size: 12px;
+}

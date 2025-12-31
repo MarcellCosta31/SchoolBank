@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SchoolBank | Configurações</title>
+    <link rel="stylesheet" href="../EstilosCss/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <h2 class="logo">🏦 SchoolBank</h2>
+
+            <nav>
+                <a href="index.html"><i class="fas fa-chart-bar"></i>Dashboard</a>
+                <a href="alunos.html"><i class="fas fa-users"></i>Funcionários</a>
+                <a href="pagamentos.html"><i class="fas fa-money-bill-wave"></i>Pagamentos e Descontos</a>
+                <a  href="holerite.html"><i class="fas fa-file-invoice"></i>Holerites</a>
+                <a class="active" href="configuracao.html"><i class="fas fa-cog"></i>Configurações</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <h1>⚙️ Configurações do Sistema</h1>
+
+            <!-- ======================
+         CADASTRAR SÉRIE
+    ======================= -->
+            <section>
+                <h2>Adicionar Série</h2>
+
+                <input type="text" id="nomeSerie" placeholder="Ex: 8º Ano">
+                <button onclick="criarSerie()">Salvar Série</button>
+            </section>
+
+            <hr>
+
+            <!-- ======================
+         CADASTRAR DISCIPLINA
+    ======================= -->
+            <section>
+                <h2>Adicionar Disciplina à Série</h2>
+
+                <select id="selectSerie">
+                    <option value="">Selecione a Série</option>
+                </select>
+
+                <input type="text" id="nomeDisciplina" placeholder="Ex: Matemática">
+                <button onclick="adicionarDisciplina()">Adicionar Disciplina</button>
+            </section>
+
+            <hr>
+
+            <!-- ======================
+         LISTAGEM
+    ======================= -->
+            <section>
+                <h2>Disciplinas por Série</h2>
+                <div id="listaSeries"></div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <script type="module" src="../ScriptsJs/configuracao.js"></script>
+</body>
+
+</html>

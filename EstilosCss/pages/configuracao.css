@@ -1,0 +1,55 @@
+/* pages/configuracao.css - Estilos da página de configuração */
+.main section {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--radius);
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+}
+
+.main section h2 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.main section input,
+.main section select {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.main section button {
+    display: block;
+    margin-top: 10px;
+}
+
+#listaSeries {
+    margin-top: 20px;
+}
+
+#listaSeries div {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--secondary-color);
+}
+
+#listaSeries h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+#listaSeries ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+#listaSeries li {
+    padding: 5px 0;
+    color: var(--text-light);
+}

@@ -1,0 +1,24 @@
+Sistema do SchoolBank
+
+Salário Base: 1000
+
+vantagens:
+
+- Adicional assiduidade: +50
+- Adicional Pontualidade: +50
+- Adicional ilibado: +100
+- Adicional monitor: +200
+- Adicional desempenho I: +100
+- Adicional desempenho II: +200
+- Adicional desempenho III: +300
+- Média máxima: + 50  x notas 10 no monitor *
+
+descontos:
+
+- Suspensão: -300
+- Falta sem justificativa: - 10 x dias faltados *
+- Atraso: - 5 x dias * 
+- Má conduta: - 20 x quantidade de anotações *
+- Recuperação: - 20 x quantidades *
+- Reprovação: - 50 x quantidades *
+- Média zero: -100 *

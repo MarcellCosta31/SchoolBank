@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>SchoolBank | Login</title>
+    <link rel="stylesheet" href="/EstilosCss/style.css">
+</head>
+<body class="login-body">
+
+<div class="login-container">
+    <div class="login-card">
+        <h1>🏦 SchoolBank</h1>
+        <p>Acesso Administrativo</p>
+
+        <label>Login</label>
+        <input type="text" id="login" placeholder="Digite seu login">
+
+        <label>Senha</label>
+
+<div class="password-box">
+    <input type="password" id="senha" placeholder="Digite sua senha">
+    <span class="toggle" onclick="mostrarSenha()">👁️</span>
+</div>
+
+        <p id="erro" class="erro"></p>
+
+        <button class="btn full" onclick="entrar()">Entrar</button>
+    </div>
+</div>
+
+<script type="module" src="/ScriptsJs/login-auth.js"></script>
+
+
+</body>
+</html>
