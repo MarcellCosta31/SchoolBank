@@ -1,2 +1,6 @@
 # SchoolBank
-O SchoolBank é um sistema desktop desenvolvido em Python com foco no gerenciamento financeiro escolar. O projeto tem como objetivo facilitar o controle de pagamentos, emissão e impressão de holerites (contracheques), além do gerenciamento de informações financeiras de colaboradores e instituições de ensino.  A aplicação foi pensada para ser simples, segura e escalável, utilizando banco de dados online (Firebase) para armazenamento e sincronização dos dados. O SchoolBank busca unir tecnologia e organização financeira, oferecendo uma solução prática para ambientes educacionais.
+O SchoolBank é um sistema web voltado para o gerenciamento financeiro escolar, desenvolvido utilizando HTML, CSS e JavaScript. O projeto tem como objetivo organizar pagamentos, descontos, adicionais e permitir a geração e visualização de holerites (contracheques) de forma simples e intuitiva.
+
+A aplicação utiliza Firebase como banco de dados online e sistema de autenticação, garantindo acesso seguro e armazenamento centralizado das informações. O foco do SchoolBank é oferecer uma solução prática para instituições de ensino, ao mesmo tempo em que serve como um projeto de aprendizado e evolução em desenvolvimento web.
+
+🚧 Projeto em desenvolvimento, com novas funcionalidades sendo adicionadas continuamente.
