@@ -696,7 +696,7 @@ function abrirPreviewEmNovaJanela(salarioBase, vantagensAdicionais, totalDescont
                         <tbody>
                             ${descontos.length > 0 ? descontos.map(d => {
                                 const valor = d.valorTotal || d.valorUnitario || d.valor || 0;
-                                const descricao = d.descricao || d.opcaoNome || d.motivo || 'Desconto';
+                                const descricao = d.opcaoNome || d.motivo || 'Desconto';
                                 const quantidade = d.quantidade || 1;
                                 const valorUnitario = d.valorUnitario || valor / Math.max(1, quantidade);
                                 
