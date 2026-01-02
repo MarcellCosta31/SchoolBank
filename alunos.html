@@ -83,7 +83,7 @@
             adicionarFuncionarioComNumero,
             listarFuncionariosTempoReal,
             atualizarContadorFuncionarios  
-        } from "../firebase.js";
+        } from "./firebase.js";
 
         import {
             getFirestore,
@@ -91,7 +91,6 @@
             getDocs
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        import { db } from "firebase.js";
 
         const modal = document.getElementById("modalFuncionario");
         const inputNome = document.getElementById("nomeFuncionario");
