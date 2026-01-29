@@ -4,21 +4,21 @@ Salário Base: 1000
 
 vantagens:
 
-- Adicional assiduidade: +50
-- Adicional Pontualidade: +50
-- Adicional ilibado: +100
-- Adicional monitor: +200
-- Adicional desempenho I: +100
-- Adicional desempenho II: +200
-- Adicional desempenho III: +300
-- Média máxima: + 50  x notas 10 no monitor *
+- 01 Adicional assiduidade: +50
+- 02 Adicional Pontualidade: +50
+- 03 Adicional ilibado: +100
+- 04 Adicional monitor: +200
+- 05 Adicional desempenho I: +100
+- 06 Adicional desempenho II: +200
+- 07 Adicional desempenho III: +300
+- 08 Média máxima: + 50  x notas 10 no monitor
 
 descontos:
 
-- Suspensão: -300
-- Falta sem justificativa: - 10 x dias faltados *
-- Atraso: - 5 x dias * 
-- Má conduta: - 20 x quantidade de anotações *
-- Recuperação: - 20 x quantidades *
-- Reprovação: - 50 x quantidades *
-- Média zero: -100 *
+- 09 Suspensão: -300
+- 10 Falta sem justificativa: - 10 x dias faltados
+- 11 Atraso: - 5 x dias 
+- 12 Má conduta: - 20 x quantidade de anotações
+- 13 Recuperação: - 20 x quantidades
+- 14 Reprovação: - 50 x quantidades
+- 15 Média zero: -100 
