@@ -79,119 +79,151 @@
 
     <!-- SCRIPT -->
     <script type="module">
-        import {
-            adicionarFuncionarioComNumero,
-            listarFuncionariosTempoReal,
-            atualizarContadorFuncionarios  
-        } from "./firebase.js";
+    import {
+        adicionarFuncionarioComNumero,
+        listarFuncionariosTempoReal,
+        atualizarContadorFuncionarios,
+        db  // Adicione esta importação
+    } from "./firebase.js";
 
-        import {
-            getFirestore,
-            collection,
-            getDocs
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import {
+        getFirestore,
+        collection,
+        getDocs
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    const modal = document.getElementById("modalFuncionario");
+    const inputNome = document.getElementById("nomeFuncionario");
+    const selectSerie = document.getElementById("serieFuncionario");
+    const tbody = document.getElementById("listaFuncionarios");
+    const busca = document.getElementById("buscaFuncionario");
 
-        const modal = document.getElementById("modalFuncionario");
-        const inputNome = document.getElementById("nomeFuncionario");
-        const selectSerie = document.getElementById("serieFuncionario");
-        const tbody = document.getElementById("listaFuncionarios");
-        const busca = document.getElementById("buscaFuncionario");
+    /* ======================
+       CARREGAR SÉRIES
+    ====================== */
+    async function carregarSeries() {
+        console.log("Carregando séries...");
+        selectSerie.innerHTML = `<option value="">Selecione a série</option>`;
 
-        /* ======================
-           CARREGAR SÉRIES
-        ====================== */
-        async function carregarSeries() {
-            selectSerie.innerHTML = `<option value="">Selecione a série</option>`;
+        try {
+            // Verifique se o db está definido
+            if (!db) {
+                console.error("Erro: db não está definido");
+                return;
+            }
 
             const snapshot = await getDocs(
                 collection(db, "configuracoes", "series", "lista")
             );
 
+            console.log(`Encontradas ${snapshot.size} séries`);
+
             snapshot.forEach(doc => {
                 const serie = doc.data();
+                console.log("Série encontrada:", doc.id, serie);
 
                 const option = document.createElement("option");
                 option.value = doc.id;          // ID da série
                 option.textContent = serie.nome; // Nome da série
                 selectSerie.appendChild(option);
             });
+        } catch (erro) {
+            console.error("Erro ao carregar séries:", erro);
         }
-
-
-        /* ======================
-           MODAL
-        ====================== */
-        window.abrirModal = async () => {
-            inputNome.value = "";
-            selectSerie.value = "";
-            await carregarSeries();
-            modal.style.display = "flex";
-            inputNome.focus();
-        };
-
-        window.fecharModal = () => {
-            modal.style.display = "none";
-        };
-
-        /* ======================
-           SALVAR FUNCIONÁRIO
-        ====================== */
-        window.salvarFuncionario = async () => {
-    const nome = inputNome.value.trim();
-    const serieId = selectSerie.value;
-    const serieNome = selectSerie.options[selectSerie.selectedIndex]?.text;
-
-    if (!nome || !serieId) {
-        alert("Preencha o nome e a série");
-        return;
     }
 
-    try {
-        // Desabilita o botão para evitar duplo clique
-        const btn = document.querySelector('.modal-actions .btn.green');
-        btn.disabled = true;
-        btn.textContent = 'Salvando...';
-        
-        const numero = await adicionarFuncionarioComNumero(nome, {
-            serieId,
-            serieNome
-        });
+    /* ======================
+       MODAL
+    ====================== */
+    window.abrirModal = async () => {
+        console.log("Abrindo modal...");
+        inputNome.value = "";
+        selectSerie.value = "";
+        await carregarSeries();
+        modal.style.display = "flex";
+        inputNome.focus();
+    };
 
-        alert(`Funcionário cadastrado!\nNúmero: ${numero}`);
-        fecharModal();
-    } catch (erro) {
-        console.error(erro);
-        alert("Erro ao cadastrar funcionário");
-        
-        // Tenta atualizar o dashboard manualmente em caso de erro
+    window.fecharModal = () => {
+        console.log("Fechando modal...");
+        modal.style.display = "none";
+    };
+
+    // Adicione este evento para fechar modal ao clicar fora
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            fecharModal();
+        }
+    });
+
+    // Adicione este evento para fechar com ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
+            fecharModal();
+        }
+    });
+
+    /* ======================
+       SALVAR FUNCIONÁRIO
+    ====================== */
+    window.salvarFuncionario = async () => {
+        const nome = inputNome.value.trim();
+        const serieId = selectSerie.value;
+        const serieNome = selectSerie.options[selectSerie.selectedIndex]?.text;
+
+        console.log("Salvando funcionário:", nome, serieId, serieNome);
+
+        if (!nome || !serieId) {
+            alert("Preencha o nome e a série");
+            return;
+        }
+
         try {
-            await atualizarContadorFuncionarios();
-        } catch (dashboardError) {
-            console.error("Erro ao atualizar dashboard:", dashboardError);
+            // Desabilita o botão para evitar duplo clique
+            const btn = document.querySelector('.modal-actions .btn.green');
+            btn.disabled = true;
+            btn.textContent = 'Salvando...';
+            
+            const numero = await adicionarFuncionarioComNumero(nome, {
+                serieId,
+                serieNome
+            });
+
+            alert(`Funcionário cadastrado!\nNúmero: ${numero}`);
+            fecharModal();
+        } catch (erro) {
+            console.error(erro);
+            alert("Erro ao cadastrar funcionário");
+            
+            // Tenta atualizar o dashboard manualmente em caso de erro
+            try {
+                await atualizarContadorFuncionarios();
+            } catch (dashboardError) {
+                console.error("Erro ao atualizar dashboard:", dashboardError);
+            }
+        } finally {
+            // Reabilita o botão
+            const btn = document.querySelector('.modal-actions .btn.green');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Salvar';
+            }
         }
-    } finally {
-        // Reabilita o botão
-        const btn = document.querySelector('.modal-actions .btn.green');
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = 'Salvar';
-        }
-    }
-};
+    };
 
-        /* ======================
-           LISTAGEM + BUSCA
-        ====================== */
-        listarFuncionariosTempoReal((funcionarios) => {
+    /* ======================
+       LISTAGEM + BUSCA
+    ====================== */
+    listarFuncionariosTempoReal((funcionarios) => {
+        console.log("Funcionários carregados:", funcionarios.length);
 
-            function render(lista) {
-                tbody.innerHTML = "";
+        function render(lista) {
+            tbody.innerHTML = "";
 
-                lista.forEach(funcionario => {
-                    const tr = document.createElement("tr");
+            lista.forEach(funcionario => {
+                const tr = document.createElement("tr");
 
-                    tr.innerHTML = `
+                tr.innerHTML = `
                     <td>${funcionario.numero}</td>
                     <td class="link-aluno"
                         onclick="abrirDescricao('${funcionario.id}')">
@@ -201,28 +233,30 @@
                     <td>${funcionario.status}</td>
                 `;
 
-                    tbody.appendChild(tr);
-                });
-            }
+                tbody.appendChild(tr);
+            });
+        }
 
-            render(funcionarios);
+        render(funcionarios);
 
-            busca.oninput = () => {
-                const termo = busca.value.toLowerCase();
-
-                render(
-                    funcionarios.filter(f =>
-                        f.nome.toLowerCase().includes(termo) ||
-                        f.numero.includes(termo)
-                    )
-                );
-            };
-        });
-
-        window.abrirDescricao = (id) => {
-            window.location.href = `descricaoFuncionario.html?id=${id}`;
+        busca.oninput = () => {
+            const termo = busca.value.toLowerCase();
+            render(
+                funcionarios.filter(f =>
+                    f.nome.toLowerCase().includes(termo) ||
+                    f.numero.includes(termo)
+                )
+            );
         };
-    </script>
+    });
+
+    window.abrirDescricao = (id) => {
+        window.location.href = `descricaoFuncionario.html?id=${id}`;
+    };
+
+    // Adicione um log inicial para debug
+    console.log("Script alunos.html carregado");
+</script>
 
 </body>
 

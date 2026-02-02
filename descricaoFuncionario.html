@@ -326,10 +326,8 @@
 
 <script type="module">
     import { 
-        buscarFuncionarioPorId, 
-        editarFuncionario,
         db 
-    } from "firebase.js";
+    } from "./firebase.js";
     
     import { 
         doc, getDoc, setDoc, updateDoc,
@@ -348,7 +346,60 @@
 
     // ===== FUNÇÕES PRINCIPAIS =====
     
+    // FUNÇÃO PARA BUSCAR FUNCIONÁRIO (substitua a importação que não existe)
+    async function buscarFuncionarioPorId(funcId) {
+        try {
+            if (!funcId) {
+                console.error("ID do funcionário não fornecido");
+                return null;
+            }
+
+            console.log("Buscando funcionário com ID:", funcId);
+            
+            const docRef = doc(db, "funcionarios", funcId);
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                console.log("Funcionário encontrado:", data);
+                return {
+                    id: docSnap.id,
+                    ...data
+                };
+            } else {
+                console.error("Funcionário não encontrado no Firestore");
+                return null;
+            }
+        } catch (error) {
+            console.error("Erro ao buscar funcionário:", error);
+            return null;
+        }
+    }
+
+    // FUNÇÃO PARA EDITAR FUNCIONÁRIO
+    async function editarFuncionario(funcId, novosDados) {
+        try {
+            const docRef = doc(db, "funcionarios", funcId);
+            await updateDoc(docRef, {
+                ...novosDados,
+                atualizadoEm: new Date().toISOString()
+            });
+            return true;
+        } catch (error) {
+            console.error("Erro ao editar funcionário:", error);
+            return false;
+        }
+    }
+
     async function carregarFuncionario() {
+        console.log("Iniciando carregamento do funcionário, ID:", id);
+        
+        if (!id) {
+            alert("ID do funcionário não informado na URL!");
+            voltar();
+            return;
+        }
+
         funcionarioAtual = await buscarFuncionarioPorId(id);
         
         if (!funcionarioAtual) {
@@ -357,27 +408,48 @@
             return;
         }
 
+        console.log("Funcionário carregado:", funcionarioAtual);
+
         // Atualizar interface da tab INFO
         document.getElementById('tituloFuncionario').textContent = funcionarioAtual.nome;
-        document.getElementById('numero').textContent = funcionarioAtual.numero;
-        document.getElementById('nome').textContent = funcionarioAtual.nome;
+        document.getElementById('numero').textContent = funcionarioAtual.numero || 'N/A';
+        document.getElementById('nome').textContent = funcionarioAtual.nome || 'N/A';
         document.getElementById('serie').textContent = funcionarioAtual.serieNome || '-';
-        document.getElementById('dataCadastro').textContent = formatarData(funcionarioAtual.criadoEm);
+        
+        // Data de cadastro
+        let dataCadastro = '-';
+        if (funcionarioAtual.criadoEm) {
+            try {
+                const date = funcionarioAtual.criadoEm.toDate ? 
+                    funcionarioAtual.criadoEm.toDate() : 
+                    new Date(funcionarioAtual.criadoEm);
+                dataCadastro = date.toLocaleDateString('pt-BR');
+            } catch (e) {
+                dataCadastro = '-';
+            }
+        }
+        document.getElementById('dataCadastro').textContent = dataCadastro;
         
         // Status
+        const status = funcionarioAtual.status || 'Ativo';
         const statusEl = document.getElementById('status');
-        statusEl.textContent = funcionarioAtual.status || 'Ativo';
-        statusEl.className = funcionarioAtual.status === 'Inativo' ? 
+        statusEl.textContent = status;
+        statusEl.className = status === 'Inativo' ? 
             'status-badge status-inativo' : 'status-badge status-ativo';
         
         // Botão de status
         const btnStatus = document.getElementById('btnStatus');
         const btnStatusAcao = document.getElementById('btnStatusAcao');
-        const statusText = funcionarioAtual.status === 'Inativo' ? 'Ativar' : 'Inativar';
-        const statusIcon = funcionarioAtual.status === 'Inativo' ? 'fa-check' : 'fa-ban';
+        const statusText = status === 'Inativo' ? 'Ativar' : 'Inativar';
+        const statusIcon = status === 'Inativo' ? 'fa-check' : 'fa-ban';
         
-        btnStatus.innerHTML = `<i class="fas ${statusIcon}"></i> ${statusText}`;
-        btnStatusAcao.innerHTML = `<i class="fas ${statusIcon}"></i> ${statusText} Funcionário`;
+        if (btnStatus) {
+            btnStatus.innerHTML = `<i class="fas ${statusIcon}"></i> ${statusText}`;
+        }
+        
+        if (btnStatusAcao) {
+            btnStatusAcao.innerHTML = `<i class="fas ${statusIcon}"></i> ${statusText} Funcionário`;
+        }
         
         // Carregar boletim e estatísticas
         await carregarBoletim();
@@ -385,6 +457,8 @@
     }
 
     async function carregarBoletim() {
+        console.log("Carregando boletim para funcionário:", id);
+        
         const listaBoletim = document.getElementById("listaBoletim");
         const selectDisciplina = document.getElementById("disciplina");
         
@@ -398,34 +472,93 @@
         let totalNotas = 0;
         let qtdDisciplinasComNotas = 0;
 
-        // Carregar disciplinas da série (usando a mesma estrutura do código antigo)
-        if (funcionarioAtual.serieId) {
-            // ATENÇÃO: Verifique qual estrutura você está usando no Firebase
-            // Opção 1: Se está usando configuracoes/series/lista/{id}
-            const serieRef = doc(db, "configuracoes", "series", "lista", funcionarioAtual.serieId);
-            
-            // Opção 2: Se está usando series/{id} diretamente
-            // const serieRef = doc(db, "series", funcionarioAtual.serieId);
-            
-            const serieSnap = await getDoc(serieRef);
-            
-            if (serieSnap.exists()) {
-                const disciplinas = serieSnap.data().disciplinas || [];
-                estatisticas.totalDisciplinas = disciplinas.length;
+        // Se não tem série, não carrega boletim
+        if (!funcionarioAtual.serieId) {
+            console.warn("Funcionário sem série:", funcionarioAtual);
+            listaBoletim.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #999; padding: 40px;">
+                        <i class="fas fa-book fa-2x" style="margin-bottom: 10px;"></i><br>
+                        Este funcionário não está associado a uma série.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
 
-                for (const disciplina of disciplinas) {
-                    // Adicionar ao select
-                    selectDisciplina.innerHTML += 
-                        `<option value="${disciplina}">${disciplina}</option>`;
+        console.log("Buscando série ID:", funcionarioAtual.serieId);
 
+        try {
+            // TENTAR DIFERENTES ESTRUTURAS DO FIREBASE
+            let disciplinas = [];
+            
+            // Opção 1: configuracoes/series/lista/{id}
+            try {
+                const serieRef1 = doc(db, "configuracoes", "series", "lista", funcionarioAtual.serieId);
+                const serieSnap1 = await getDoc(serieRef1);
+                
+                if (serieSnap1.exists()) {
+                    console.log("Série encontrada na estrutura: configuracoes/series/lista/");
+                    const serieData = serieSnap1.data();
+                    disciplinas = serieData.disciplinas || [];
+                } else {
+                    // Opção 2: series/{id}
+                    const serieRef2 = doc(db, "series", funcionarioAtual.serieId);
+                    const serieSnap2 = await getDoc(serieRef2);
+                    
+                    if (serieSnap2.exists()) {
+                        console.log("Série encontrada na estrutura: series/");
+                        const serieData = serieSnap2.data();
+                        disciplinas = serieData.disciplinas || [];
+                    } else {
+                        // Opção 3: séries direto no documento
+                        const serieRef3 = doc(db, "series", funcionarioAtual.serieId);
+                        const serieSnap3 = await getDoc(serieRef3);
+                        
+                        if (serieSnap3.exists()) {
+                            console.log("Série encontrada na estrutura direta");
+                            const serieData = serieSnap3.data();
+                            disciplinas = serieData.disciplinas || serieData.materias || [];
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao buscar série:", error);
+            }
+
+            estatisticas.totalDisciplinas = disciplinas.length;
+            console.log("Disciplinas encontradas:", disciplinas);
+
+            if (disciplinas.length === 0) {
+                listaBoletim.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #999; padding: 40px;">
+                            <i class="fas fa-exclamation-triangle fa-2x" style="margin-bottom: 10px;"></i><br>
+                            Nenhuma disciplina cadastrada para esta série.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            for (const disciplina of disciplinas) {
+                console.log("Processando disciplina:", disciplina);
+                
+                // Adicionar ao select
+                selectDisciplina.innerHTML += 
+                    `<option value="${disciplina}">${disciplina}</option>`;
+
+                try {
                     // Buscar notas do funcionário para esta disciplina
                     const ref = doc(db, "funcionarios", id, "boletim", disciplina);
                     const snap = await getDoc(ref);
                     const dados = snap.exists() ? snap.data() : {};
 
+                    console.log(`Notas para ${disciplina}:`, dados);
+
                     // Calcular média da disciplina
                     const notas = [dados.b1, dados.b2, dados.b3, dados.b4]
-                        .filter(n => n !== undefined && n !== null);
+                        .filter(n => n !== undefined && n !== null && !isNaN(n));
                     
                     const mediaDisciplina = notas.length > 0 ? 
                         (notas.reduce((a, b) => a + b, 0) / notas.length).toFixed(1) : "-";
@@ -437,14 +570,14 @@
                         qtdDisciplinasComNotas++;
                     }
 
-                    // Adicionar à tabela (igual ao código antigo)
+                    // Adicionar à tabela
                     listaBoletim.innerHTML += `
                         <tr>
                             <td><strong>${disciplina}</strong></td>
-                            <td>${dados.b1 ?? "-"}</td>
-                            <td>${dados.b2 ?? "-"}</td>
-                            <td>${dados.b3 ?? "-"}</td>
-                            <td>${dados.b4 ?? "-"}</td>
+                            <td>${dados.b1 !== undefined ? dados.b1 : "-"}</td>
+                            <td>${dados.b2 !== undefined ? dados.b2 : "-"}</td>
+                            <td>${dados.b3 !== undefined ? dados.b3 : "-"}</td>
+                            <td>${dados.b4 !== undefined ? dados.b4 : "-"}</td>
                             <td><strong>${mediaDisciplina}</strong></td>
                             <td>
                                 <button class="btn btn-small" onclick="editarNota('${disciplina}')">
@@ -453,34 +586,28 @@
                             </td>
                         </tr>
                     `;
+                } catch (error) {
+                    console.error(`Erro ao processar disciplina ${disciplina}:`, error);
                 }
-
-                // Calcular média geral
-                estatisticas.mediaGeral = qtdDisciplinasComNotas > 0 ? 
-                    (totalNotas / qtdDisciplinasComNotas).toFixed(1) : 0;
-
-                // Atualizar resumo
-                document.getElementById('resumoBoletim').innerHTML = `
-                    ${estatisticas.disciplinasComNota} de ${estatisticas.totalDisciplinas} disciplinas com notas | 
-                    Média Geral: <strong>${estatisticas.mediaGeral}</strong>
-                `;
-            } else {
-                listaBoletim.innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; color: #999; padding: 40px;">
-                            <i class="fas fa-exclamation-triangle fa-2x" style="margin-bottom: 10px;"></i><br>
-                            Série não encontrada. ID: ${funcionarioAtual.serieId}
-                        </td>
-                    </tr>
-                `;
-                console.warn("Série não encontrada:", funcionarioAtual.serieId);
             }
-        } else {
+
+            // Calcular média geral
+            estatisticas.mediaGeral = qtdDisciplinasComNotas > 0 ? 
+                (totalNotas / qtdDisciplinasComNotas).toFixed(1) : "0.0";
+
+            // Atualizar resumo
+            document.getElementById('resumoBoletim').innerHTML = `
+                ${estatisticas.disciplinasComNota} de ${estatisticas.totalDisciplinas} disciplinas com notas | 
+                Média Geral: <strong>${estatisticas.mediaGeral}</strong>
+            `;
+
+        } catch (error) {
+            console.error("Erro ao carregar boletim:", error);
             listaBoletim.innerHTML = `
                 <tr>
                     <td colspan="7" style="text-align: center; color: #999; padding: 40px;">
-                        <i class="fas fa-book fa-2x" style="margin-bottom: 10px;"></i><br>
-                        Este funcionário não está associado a uma série.
+                        <i class="fas fa-exclamation-triangle fa-2x" style="margin-bottom: 10px;"></i><br>
+                        Erro ao carregar boletim: ${error.message}
                     </td>
                 </tr>
             `;
@@ -496,7 +623,7 @@
 
     // ===== FUNÇÕES DE INTERFACE =====
     
-    function abrirTab(tabId) {
+    window.abrirTab = function(tabId) {
         console.log("Abrindo tab:", tabId);
         
         // Remover active de todas as tabs
@@ -515,19 +642,9 @@
         }
     }
 
-    function formatarData(data) {
-        if (!data) return '-';
-        try {
-            const date = data.toDate ? data.toDate() : new Date(data);
-            return date.toLocaleDateString('pt-BR');
-        } catch (e) {
-            return '-';
-        }
-    }
-
     // ===== FUNÇÕES DE MODAL =====
     
-    window.abrirModalNota = () => {
+    window.abrirModalNota = function() {
         if (estatisticas.totalDisciplinas === 0) {
             alert("Este funcionário não tem disciplinas cadastradas na série.");
             return;
@@ -536,19 +653,19 @@
         document.getElementById('nota').focus();
     };
 
-    window.fecharModalNota = () => {
+    window.fecharModalNota = function() {
         document.getElementById('modal-nota').classList.add('hidden');
         // Limpar campos
         document.getElementById('nota').value = '';
         document.getElementById('bimestre').value = 'b1';
     };
 
-    window.editarNota = (disciplina) => {
+    window.editarNota = function(disciplina) {
         document.getElementById('disciplina').value = disciplina;
         abrirModalNota();
     };
 
-    window.salvarNota = async () => {
+    window.salvarNota = async function() {
         const disciplina = document.getElementById('disciplina').value;
         const bimestre = document.getElementById('bimestre').value;
         const nota = parseFloat(document.getElementById('nota').value);
@@ -578,7 +695,7 @@
 
     // ===== FUNÇÕES DE GERENCIAMENTO =====
     
-    window.alternarStatus = async () => {
+    window.alternarStatus = async function() {
         const novoStatus = funcionarioAtual.status === 'Inativo' ? 'Ativo' : 'Inativo';
         const confirmar = confirm(`Deseja realmente ${novoStatus === 'Inativo' ? 'inativar' : 'ativar'} este funcionário?`);
         
@@ -588,18 +705,6 @@
                     status: novoStatus,
                     ativo: novoStatus === 'Ativo'
                 });
-                
-                // Atualizar dashboard se necessário
-                try {
-                    const dashboardRef = doc(db, "dashboard", "estatisticas");
-                    await updateDoc(dashboardRef, {
-                        [novoStatus === 'Inativo' ? 'totalInativos' : 'totalAtivos']: increment(1),
-                        [novoStatus === 'Inativo' ? 'totalAtivos' : 'totalInativos']: increment(-1),
-                        atualizadoEm: new Date().toISOString()
-                    });
-                } catch (dashboardError) {
-                    console.error("Erro ao atualizar dashboard:", dashboardError);
-                }
                 
                 funcionarioAtual.status = novoStatus;
                 await carregarFuncionario();
@@ -612,7 +717,7 @@
         }
     };
 
-    window.voltar = () => {
+    window.voltar = function() {
         window.location.href = "alunos.html";
     };
 
@@ -620,6 +725,17 @@
     
     // Inicializar
     document.addEventListener('DOMContentLoaded', async () => {
+        console.log("DOM carregado, iniciando carregamento...");
+        
+        // Mostrar ID na URL para debug
+        console.log("ID da URL:", id);
+        
+        if (!id) {
+            alert("ID do funcionário não encontrado na URL!");
+            voltar();
+            return;
+        }
+        
         await carregarFuncionario();
         
         // Adicionar event listeners para as tabs
@@ -630,9 +746,14 @@
             });
         });
         
-        // Para debug: mostrar qual estrutura está sendo usada
+        // Para debug: verificar se o db está definido
+        console.log("db definido?", !!db);
         console.log("Funcionário carregado:", funcionarioAtual);
     });
+
+    // Para debug: expor funções no console
+    window.carregarFuncionario = carregarFuncionario;
+    window.carregarBoletim = carregarBoletim;
 </script>
 
 </body>

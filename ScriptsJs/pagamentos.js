@@ -565,11 +565,14 @@ function handleInputFocus() {
 }
 
 function handleInputBlur() {
+    // Pequeno delay para permitir clique na sugestão
     setTimeout(() => {
-        sugestoesContainer.style.display = 'none';
-    }, 200);
+        // Verifica se o mouse não está sobre as sugestões
+        if (!sugestoesContainer.matches(':hover')) {
+            sugestoesContainer.style.display = 'none';
+        }
+    }, 150);
 }
-
 function handleClickOutside(event) {
     const isClickInsideFuncionarioInput = funcionarioInput.contains(event.target);
     const isClickInsideSugestoes = sugestoesContainer.contains(event.target);
